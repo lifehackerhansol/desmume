@@ -24,7 +24,7 @@ desmume_SOURCES = \
 	glx_3Demu.cpp glx_3Demu.h \
 	cheatsGTK.h cheatsGTK.cpp \
 	main.cpp main.h
-desmume_LDADD = ../libdesmume.a \
+desmume_LDADD = ../libdesmume.a -lhidapi-libusb\
 	$(SDL_LIBS) $(GTK_LIBS) $(GTHREAD_LIBS) $(ALSA_LIBS) $(LIBAGG_LIBS) $(LIBSOUNDTOUCH_LIBS)
 if HAVE_LIBOSMESA
 desmume_LDADD += $(OSMESA_LIBS)

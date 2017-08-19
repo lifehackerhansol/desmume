@@ -111,9 +111,9 @@ void slot1_Init()
 	slot1_List[NDS_SLOT1_RETAIL_DEBUG] = construct_Slot1_Retail_DEBUG();
 
 	//optional, since this requires hidapi
-#ifdef HAVE_POWERSAVES
+//#ifdef HAVE_POWERSAVES
 	slot1_List[NDS_SLOT1_POWERSAVES] = construct_Slot1_PowerSaves();
-#endif
+//#endif
 }
 
 void slot1_Shutdown()

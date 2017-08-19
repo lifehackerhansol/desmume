@@ -56,6 +56,8 @@ CommandLine::CommandLine()
 , _slot1(NULL)
 , _slot1_fat_dir(NULL)
 , _slot1_fat_dir_type(false)
+, bootfromfirmware(0)
+, _firmware(NULL)
 #ifdef HAVE_JIT
 , _cpu_mode(-1)
 , _jit_size(-1)
@@ -133,12 +135,14 @@ ENDL
 " --bios-arm9 BIN_FILE       Uses the ARM9 BIOS provided at the specified path" ENDL
 " --bios-arm7 BIN_FILE       Uses the ARM7 BIOS provided at the specified path" ENDL
 " --bios-swi                 Uses SWI from the provided bios files (else HLE)" ENDL
+" --firmware BIN_FILE        Uses the FIRMWARE provided at the specified path" ENDL
+" --bootfromfirmware         Boots from the FIRMWARE" ENDL
 " --lang N                   Firmware language (can affect game translations)" ENDL
 "                            0 = Japanese, 1 = English (default), 2 = French" ENDL
 "                            3 = German, 4 = Italian, 5 = Spanish" ENDL
 ENDL
 "Arguments affecting contents of SLOT-1:" ENDL
-" --slot1 [RETAIL|RETAILAUTO|R4|RETAILNAND|RETAILMCDROM|RETAILDEBUG]" ENDL
+" --slot1 [RETAIL|RETAILAUTO|R4|RETAILNAND|RETAILMCDROM|RETAILDEBUG|POWERSAVES]" ENDL
 "                            Device type to be used SLOT-1; default RETAILAUTO" ENDL
 " --preload-rom              precache ROM to RAM instead of streaming from disk" ENDL
 " --slot1-fat-dir DIR        Directory to mount for SLOT-1 flash cards" ENDL
@@ -185,6 +189,7 @@ ENDL
 #define OPT_ARM9 201
 #define OPT_ARM7 202
 #define OPT_LANGUAGE   203
+#define OPT_FIRMWARE 204
 
 #define OPT_SLOT1 300
 #define OPT_SLOT1_FAT_DIR 301
@@ -252,6 +257,8 @@ bool CommandLine::parse(int argc,char **argv)
 			{ "bios-arm9", required_argument, NULL, OPT_ARM9},
 			{ "bios-arm7", required_argument, NULL, OPT_ARM7},
 			{ "bios-swi", no_argument, &_bios_swi, 1},
+			{ "firmware", required_argument, NULL, OPT_FIRMWARE},
+			{ "bootfromfirmware", no_argument, &bootfromfirmware, 1},
 			{ "lang", required_argument, NULL, OPT_LANGUAGE},
 
 			//slot-1 contents
@@ -309,8 +316,9 @@ bool CommandLine::parse(int argc,char **argv)
 
 		//system equipment
 		case OPT_CONSOLE_TYPE: console_type = optarg; break;
-		case OPT_ARM9: _bios_arm9 = strdup(_bios_arm9); break;
-		case OPT_ARM7: _bios_arm7 = strdup(_bios_arm7); break;
+		case OPT_ARM9: bios_arm9 = optarg; break;
+		case OPT_ARM7: bios_arm7 = optarg; break;
+		case OPT_FIRMWARE: firmware = optarg; break;
 
 		//slot-1 contents
 		case OPT_SLOT1: slot1 = strtoupper(optarg); break;
@@ -341,6 +349,11 @@ bool CommandLine::parse(int argc,char **argv)
 		case OPT_LANGUAGE: language = atoi(optarg); break;
 		}
 	} //arg parsing loop
+
+	printf("test\n");
+	printf("bios_arm7 = %s\n", bios_arm7.c_str());
+	printf("bios_arm9 = %s\n", bios_arm9.c_str());
+	printf("firmware = %s\n", firmware.c_str());
 
 	if(opt_help)
 	{
@@ -397,16 +410,25 @@ bool CommandLine::parse(int argc,char **argv)
 		CommonSettings.autodetectBackupMethod = autodetect_method;
 
 	//TODO NOT MAX PRIORITY! change ARM9BIOS etc to be a std::string
-	if(_bios_arm9) { CommonSettings.UseExtBIOS = true; strcpy(CommonSettings.ARM9BIOS,_bios_arm9); }
-	if(_bios_arm7) { CommonSettings.UseExtBIOS = true; strcpy(CommonSettings.ARM7BIOS,_bios_arm7); }
+	if(!bios_arm9.empty()) { CommonSettings.UseExtBIOS = true; strcpy(CommonSettings.ARM9BIOS,bios_arm9.c_str()); }
+	if(!bios_arm7.empty()) { CommonSettings.UseExtBIOS = true; strcpy(CommonSettings.ARM7BIOS,bios_arm7.c_str()); }
 	if(_bios_swi) CommonSettings.SWIFromBIOS = true;
+	if(!firmware.empty()) { CommonSettings.UseExtFirmware = true; strcpy(CommonSettings.Firmware,firmware.c_str()); }
+	if(bootfromfirmware) CommonSettings.BootFromFirmware = true;
 	if(_spu_sync_mode != -1) CommonSettings.SPU_sync_mode = _spu_sync_mode;
 	if(_spu_sync_method != -1) CommonSettings.SPU_sync_method = _spu_sync_method;
 	if(_spu_advanced) CommonSettings.spu_advanced = true;
 
-	free(_bios_arm9);
-	free(_bios_arm7);
-	_bios_arm9 = _bios_arm7 = NULL;
+	printf("ARM9BIOS = %s\n", CommonSettings.ARM9BIOS);
+	printf("ARM7BIOS = %s\n", CommonSettings.ARM7BIOS);
+	printf("Firmware = %s\n", CommonSettings.Firmware);
+	printf("BootFromFirmware = %d\n", CommonSettings.BootFromFirmware);
+	printf("SWIFromBIOS = %d\n", CommonSettings.SWIFromBIOS);
+
+	//free(firmware);
+	//free(_bios_arm9);
+	//free(_bios_arm7);
+	_firmware = _bios_arm9 = _bios_arm7 = NULL;
 
 	//remaining argument should be an NDS file, and nothing more
 	int remain = argc-optind;
@@ -421,7 +443,7 @@ bool CommandLine::validate()
 {
 	if(slot1 != "")
 	{
-		if(slot1 != "R4" && slot1 != "RETAIL" && slot1 != "NONE" && slot1 != "RETAILNAND") {
+		if(slot1 != "R4" && slot1 != "RETAIL" && slot1 != "NONE" && slot1 != "RETAILNAND" && slot1 != "POWERSAVES") {
 			printerror("Invalid slot1 device specified.\n");
 			return false;
 		}
@@ -462,14 +484,14 @@ bool CommandLine::validate()
 		return false;
 	}
 
-	if((_bios_arm9 && !_bios_arm7) || (_bios_arm7 && !_bios_arm9)) {
+	/*if((_bios_arm9 && !_bios_arm7) || (_bios_arm7 && !_bios_arm9)) {
 		printerror("If either bios-arm7 or bios-arm9 are specified, both must be.\n");
 		return false;
 	}
 
 	if(_bios_swi && (!_bios_arm7 || !_bios_arm9)) {
 		printerror("If either bios-swi is used, bios-arm9 and bios-arm7 must be specified.\n");
-	}
+	}*/
 
 	if((_cflash_image && _gbaslot_rom) || (_cflash_path && _gbaslot_rom)) {
 		printerror("Cannot specify both cflash and gbaslot rom (both occupy SLOT-2)\n");
@@ -548,5 +570,7 @@ void CommandLine::process_addonCommands()
 			slot1_Change(NDS_SLOT1_RETAIL_MCROM);
 			else if(slot1 == "RETAILDEBUG")
 				slot1_Change(NDS_SLOT1_RETAIL_DEBUG);
+				else if(slot1 == "POWERSAVES")
+					slot1_Change(NDS_SLOT1_POWERSAVES);
 }
 

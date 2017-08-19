@@ -61,6 +61,9 @@ public:
 	std::string slot1;
 	std::string console_type;
 	std::string slot1_fat_dir;
+	std::string bios_arm9;
+	std::string bios_arm7;
+	std::string firmware;
 	bool _slot1_fat_dir_type;
 	int disable_sound;
 	int disable_limiter;
@@ -99,10 +102,12 @@ private:
 	int _advanced_timing;
 	int _texture_deposterize;
 	int _texture_smooth;
+	int bootfromfirmware;
 #ifdef HAVE_JIT
 	int _cpu_mode;
 	int _jit_size;
 #endif
+	char* _firmware;
 	char* _slot1;
 	char *_slot1_fat_dir;
 	char* _console_type;
