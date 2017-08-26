@@ -102,12 +102,14 @@ void slot1_Init()
 	extern TISlot1InterfaceConstructor construct_Slot1_Retail_NAND;
 	extern TISlot1InterfaceConstructor construct_Slot1_Retail_MCROM;
 	extern TISlot1InterfaceConstructor construct_Slot1_Retail_DEBUG;
+	extern TISlot1InterfaceConstructor construct_Slot1_AK2i;
 	slot1_List[NDS_SLOT1_NONE] = construct_Slot1_None();
 	slot1_List[NDS_SLOT1_RETAIL_AUTO] = construct_Slot1_Retail_Auto();
 	slot1_List[NDS_SLOT1_R4] = construct_Slot1_R4();
 	slot1_List[NDS_SLOT1_RETAIL_NAND] = construct_Slot1_Retail_NAND();
 	slot1_List[NDS_SLOT1_RETAIL_MCROM] = construct_Slot1_Retail_MCROM();
 	slot1_List[NDS_SLOT1_RETAIL_DEBUG] = construct_Slot1_Retail_DEBUG();
+	slot1_List[NDS_SLOT1_AK2I] = construct_Slot1_AK2i();
 }
 
 void slot1_Shutdown()
