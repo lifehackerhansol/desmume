@@ -103,6 +103,9 @@ void slot1_Init()
 	extern TISlot1InterfaceConstructor construct_Slot1_Retail_MCROM;
 	extern TISlot1InterfaceConstructor construct_Slot1_Retail_DEBUG;
 	extern TISlot1InterfaceConstructor construct_Slot1_PowerSaves;
+    extern TISlot1InterfaceConstructor construct_Slot1_dsVision;
+	extern TISlot1InterfaceConstructor construct_Slot1_SCDS2;
+	extern TISlot1InterfaceConstructor construct_Slot1_AK2i;
 	slot1_List[NDS_SLOT1_NONE] = construct_Slot1_None();
 	slot1_List[NDS_SLOT1_RETAIL_AUTO] = construct_Slot1_Retail_Auto();
 	slot1_List[NDS_SLOT1_R4] = construct_Slot1_R4();
@@ -114,6 +117,11 @@ void slot1_Init()
 //#ifdef HAVE_POWERSAVES
 	slot1_List[NDS_SLOT1_POWERSAVES] = construct_Slot1_PowerSaves();
 //#endif
+
+    slot1_List[NDS_SLOT1_DSVISION] = construct_Slot1_dsVision();
+
+	slot1_List[NDS_SLOT1_SCDS2] = construct_Slot1_SCDS2();
+	slot1_List[NDS_SLOT1_AK2i] = construct_Slot1_AK2i();
 }
 
 void slot1_Shutdown()
@@ -151,7 +159,7 @@ void slot1_Reset()
 	
 	//connect new device
 	slot1_device = slot1_List[slot1_device_type];
-	if (slot1_device_type == NDS_SLOT1_R4)
+	if (slot1_device_type == NDS_SLOT1_R4 || slot1_device_type == NDS_SLOT1_SCDS2)
 		scanDir();
 	slot1_device->connect();
 }

@@ -1256,7 +1256,7 @@ void MMU_GC_endTransfer(u32 PROCNUM)
 
 void GC_Command::print()
 {
-	printf("%02X%02X%02X%02X%02X%02X%02X%02X\n",bytes[0],bytes[1],bytes[2],bytes[3],bytes[4],bytes[5],bytes[6],bytes[7]);
+    GCLOG("%02X%02X%02X%02X%02X%02X%02X%02X\n",bytes[0],bytes[1],bytes[2],bytes[3],bytes[4],bytes[5],bytes[6],bytes[7]);
 }
 
 void GC_Command::toCryptoBuffer(u32 buf[2])
@@ -1309,6 +1309,9 @@ void FASTCALL MMU_writeToGCControl(u32 val)
 
 	//store written value, without bit 31 and bit 23 set (those will be patched in as operations proceed)
 	//T1WriteLong(MMU.MMU_MEM[PROCNUM][0x40], 0x1A4, val & 0x7F7FFFFF);
+
+	u32 ret = slot1_device->write32_preGCROMCTRL(PROCNUM, val); //Special case for some flashcarts
+	if (ret == 0x01020304) return;
 
 	//if this operation has been triggered by strobing that bit, run it
 	if (key2_applyseed)

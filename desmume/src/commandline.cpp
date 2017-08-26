@@ -142,7 +142,7 @@ ENDL
 "                            3 = German, 4 = Italian, 5 = Spanish" ENDL
 ENDL
 "Arguments affecting contents of SLOT-1:" ENDL
-" --slot1 [RETAIL|RETAILAUTO|R4|RETAILNAND|RETAILMCDROM|RETAILDEBUG|POWERSAVES]" ENDL
+" --slot1 [RETAIL|RETAILAUTO|R4|RETAILNAND|RETAILMCDROM|RETAILDEBUG|POWERSAVES|AK2I]" ENDL
 "                            Device type to be used SLOT-1; default RETAILAUTO" ENDL
 " --preload-rom              precache ROM to RAM instead of streaming from disk" ENDL
 " --slot1-fat-dir DIR        Directory to mount for SLOT-1 flash cards" ENDL
@@ -443,7 +443,7 @@ bool CommandLine::validate()
 {
 	if(slot1 != "")
 	{
-		if(slot1 != "R4" && slot1 != "RETAIL" && slot1 != "NONE" && slot1 != "RETAILNAND" && slot1 != "POWERSAVES") {
+		if(slot1 != "R4" && slot1 != "RETAIL" && slot1 != "NONE" && slot1 != "RETAILNAND" && slot1 != "POWERSAVES" && slot1 != "AK2I") {
 			printerror("Invalid slot1 device specified.\n");
 			return false;
 		}
@@ -565,12 +565,14 @@ void CommandLine::process_addonCommands()
 	else if(slot1 == "R4")
 		slot1_Change(NDS_SLOT1_R4);
 	else if(slot1 == "RETAILNAND")
-		slot1_Change(NDS_SLOT1_RETAIL_NAND);
-		else if(slot1 == "RETAILMCROM")
-			slot1_Change(NDS_SLOT1_RETAIL_MCROM);
-			else if(slot1 == "RETAILDEBUG")
-				slot1_Change(NDS_SLOT1_RETAIL_DEBUG);
-				else if(slot1 == "POWERSAVES")
-					slot1_Change(NDS_SLOT1_POWERSAVES);
+        slot1_Change(NDS_SLOT1_RETAIL_NAND);
+    else if(slot1 == "RETAILMCROM")
+        slot1_Change(NDS_SLOT1_RETAIL_MCROM);
+    else if(slot1 == "RETAILDEBUG")
+        slot1_Change(NDS_SLOT1_RETAIL_DEBUG);
+    else if(slot1 == "POWERSAVES")
+        slot1_Change(NDS_SLOT1_POWERSAVES);
+    else if(slot1 == "AK2I")
+        slot1_Change(NDS_SLOT1_AK2i);
 }
 

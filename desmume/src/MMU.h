@@ -291,8 +291,9 @@ enum eCardMode
 	eCardMode_Pad = 0xFFFFFFFF
 };
 
-//#define GCLOG(...) printf(__VA_ARGS__);
-#define GCLOG(...)
+#define GCLOG(...) printf(__VA_ARGS__);
+
+//#define GCLOG(...) 
 
 void MMU_GC_endTransfer(u32 PROCNUM);
 
@@ -310,6 +311,7 @@ struct GCBUS_Controller
 {
 	int transfer_count;
 	eCardMode mode; //probably only one of these
+	int blocklen;
 };
 
 typedef union
