@@ -73,6 +73,9 @@ public:
 	virtual void write_command(u8 PROCNUM, GC_Command command) { }
 
 	//called when the cpu writes to the GC bus
+	virtual u32 write32_preGCROMCTRL(u8 PROCNUM, u32 val) { return -1; }
+
+	//called when the cpu writes to the GC bus
 	virtual void write_GCDATAIN(u8 PROCNUM, u32 val) { }
 
 	//called when the cpu reads from the GC bus
@@ -103,6 +106,7 @@ enum NDS_SLOT1_TYPE
 	NDS_SLOT1_RETAIL_NAND,	            // 0x02 - Made in Ore/WarioWare D.I.Y.
 	NDS_SLOT1_RETAIL_MCROM,	            // 0x01 - a standard MC (eeprom, flash, fram) -bearing retail card. Also supports motion, for now, because that's the way we originally coded it
 	NDS_SLOT1_RETAIL_DEBUG,	            // 0x04 - for romhacking and fan-made translations
+	NDS_SLOT1_AK2I,                     // 0x05
 	NDS_SLOT1_COUNT			            //use to count addons - MUST BE LAST!!!
 };
 

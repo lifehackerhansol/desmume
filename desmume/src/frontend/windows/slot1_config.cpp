@@ -210,6 +210,7 @@ u32	Slot1_IDDs[NDS_SLOT1_COUNT] = {
 	IDD_SLOT1_NONE,				// NDS_SLOT1_RETAIL_NAND	- Made in Ore/WarioWare D.I.Y.
 	IDD_SLOT1_NONE,				// NDS_SLOT1_RETAIL_MCROM	- a standard MC (eeprom, flash, fram)
 	IDD_SLOT1_DEBUG,			// NDS_SLOT1_RETAIL_DEBUG	- for romhacking and fan-made translations
+	IDD_SLOT1_NONE,				// NDS_SLOT1_AK2I,			- Acekard 2(i) flash card
 };
 
 DLGPROC Slot1_Procs[NDS_SLOT1_COUNT] = {
@@ -218,7 +219,8 @@ DLGPROC Slot1_Procs[NDS_SLOT1_COUNT] = {
 	Slot1R4,					// NDS_SLOT1_R4,			- R4 flash card
 	Slot1None,  				// NDS_SLOT1_RETAIL_NAND	- Made in Ore/WarioWare D.I.Y.
 	Slot1None,					// NDS_SLOT1_RETAIL_MCROM	- a standard MC (eeprom, flash, fram)
-	Slot1Debug					// NDS_SLOT1_RETAIL_DEBUG	- for romhacking and fan-made translations
+	Slot1Debug,					// NDS_SLOT1_RETAIL_DEBUG	- for romhacking and fan-made translations
+	Slot1None					// NDS_SLOT1_AK2I,			- Acekard 2(i) flash card
 };
 
 
@@ -349,6 +351,8 @@ void slot1Dialog(HWND hwnd)
 					path.setpath(path.SLOT1D, tmp_fs_path);
 					WritePrivateProfileStringW(LSECTION, SLOT1DKEY, mbstowcs((std::string)path.pathToSlot1D).c_str(), IniNameW);
 				}
+				break;
+			case NDS_SLOT1_AK2I:
 				break;
 			default:
 				return;
