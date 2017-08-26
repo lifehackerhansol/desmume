@@ -1323,6 +1323,9 @@ void FASTCALL MMU_writeToGCControl(u32 val)
 	//store written value, without bit 31 and bit 23 set (those will be patched in as operations proceed)
 	//T1WriteLong(MMU.MMU_MEM[PROCNUM][0x40], 0x1A4, val & 0x7F7FFFFF);
 
+	u32 ret = slot1_device->write32_preGCROMCTRL(PROCNUM, val); //Special case for some flashcarts
+	if (ret == 0x01020304) return;
+
 	//if this operation has been triggered by strobing that bit, run it
 	if (key2_applyseed)
 	{
@@ -1331,6 +1334,8 @@ void FASTCALL MMU_writeToGCControl(u32 val)
 
 	//pluck out the command registers into a more convenient format
 	GC_Command rawcmd = *(GC_Command*)&MMU.MMU_MEM[PROCNUM][0x40][0x1A8];
+
+	T1WriteLong(MMU.MMU_MEM[PROCNUM][0x40], 0x1A4, val & 0x7F7FFFFF);
 
 	//when writing a 1 to the start bit, a command runs.
 	//the command is transferred to the GC during the next 8 clocks
@@ -1348,7 +1353,6 @@ void FASTCALL MMU_writeToGCControl(u32 val)
 	}
 	else
 	{
-		T1WriteLong(MMU.MMU_MEM[PROCNUM][0x40], 0x1A4, val & 0x7F7FFFFF);
 		GCLOG("SCUTTLE????\n");
 		return;
 	}
