@@ -28,7 +28,7 @@
 extern armcpu_t NDS_ARM7;
 extern armcpu_t NDS_ARM9;
 
-//#define virtual_fat
+#define virtual_fat
 
 class Slot1_AK2i : public ISlot1Interface, public ISlot1Comp_Protocol_Client
 {
@@ -87,10 +87,10 @@ public:
         ak_idx = 0;
         if (len <= 0)
         {
-            ZeroMemory(ak_data, sizeof(ak_data));
+            memset(ak_data, 0, sizeof(ak_data));
             return;
         }
-        ZeroMemory(ak_data, 7);
+		memset(ak_data, 0, 7);
         unsigned char *ak_data8 = (unsigned char*)ak_data;
         for (int i = 7, j = 0, b = 0; i < 512; i ++, b >>= 1)
         {
