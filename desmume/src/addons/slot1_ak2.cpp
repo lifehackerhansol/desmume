@@ -371,7 +371,7 @@ public:
                         u32 adr = (protocol.command.bytes[4]<<24) | (protocol.command.bytes[5]<<16) | (protocol.command.bytes[6]<<8) | protocol.command.bytes[7];
                         ak_map = (protocol.command.bytes[1]>>4) & 0x0F;
                         sd_stat = 0x77; //Required for ingame code else it infinite loops :D
-						adr <<= 9; //r4igold.cc
+						//adr <<= 9; //r4igold.cc
     #ifdef EMULATE_SLOW_SD
                         slowDown=sdDelay;
     #endif
@@ -407,7 +407,7 @@ public:
                         ak_map = (protocol.command.bytes[1]>>4) & 0x0F;
                         sd_stat = 0x00;
                         push_len = 512/8;
-						adr <<= 9; //r4igold.cc
+						//adr <<= 9; //r4igold.cc
                         INFO("Write from Map %d at adr %08X",ak_map,adr);
                         switch (ak_map)
                         {
