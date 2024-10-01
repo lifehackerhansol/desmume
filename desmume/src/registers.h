@@ -351,6 +351,11 @@
 //DSI
 #define REG_DSIMODE 0x04004000
 
+// nocash debug registers
+// https://problemkaputt.de/gbatek-ds-debug-registers-emulator-devkits.htm
+#define REG_NOCASH_STRING_OUT   0x04FFFA10
+#define REG_NOCASH_CHAR_OUT     0x04FFFA1C
+
 #define IPCFIFOCNT_SENDEMPTY 0x0001
 #define IPCFIFOCNT_SENDFULL 0x0002
 #define IPCFIFOCNT_SENDIRQEN 0x0004
