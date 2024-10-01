@@ -2743,6 +2743,11 @@ bool validateIORegsWrite(u32 addr, u8 size, u32 val)
 			// 0x04100000
 			case REG_IPCFIFORECV:
 			case REG_GCDATAIN:
+
+			// 0x04FFFA00
+			case REG_NOCASH_STRING_OUT:
+			case REG_NOCASH_CHAR_OUT:
+
 				//printf("MMU9 write%02d to register %08Xh = %08Xh (PC:%08X)\n", size, addr, val, ARMPROC.instruct_adr);
 				return true;
 
@@ -2844,6 +2849,10 @@ bool validateIORegsWrite(u32 addr, u8 size, u32 val)
 			// 0x04100000 - IPC
 			case REG_IPCFIFORECV:
 			case REG_GCDATAIN:
+
+			// 0x04FFFA00 - No$gba debug registers
+			case REG_NOCASH_STRING_OUT:
+			case REG_NOCASH_CHAR_OUT:
 				//printf("MMU7 write%02d to register %08Xh = %08Xh (PC:%08X)\n", size, addr, val, ARMPROC.instruct_adr);
 				return true;
 
@@ -5123,6 +5132,26 @@ void FASTCALL _MMU_ARM9_write32(u32 adr, u32 val)
 				case REG_GCDATAIN:
 					MMU_writeToGC<ARMCPU_ARM9>(val);
 					return;
+
+				case REG_NOCASH_STRING_OUT:
+				{
+					char in_string[0x1000] = {};
+					char in_char = '.';
+
+					for(int i=0; i < 0x1000; i++)
+					{
+						in_char = T1ReadByte(MMU.MMU_MEM[ARMCPU_ARM9][val>>20], (val + i) & MMU.MMU_MASK[ARMCPU_ARM9][val>>20]);
+						if (in_char == '\0')
+							break;
+						in_string[i] = in_char;
+					}
+					printf("%s\n", in_string);
+					return;
+				}
+
+				case REG_NOCASH_CHAR_OUT:
+					printf("%c", (char)(val & 0xFF));
+					return;
 			}
 			
 			T1WriteLong(MMU.MMU_MEM[ARMCPU_ARM9][adr>>20], adr & MMU.MMU_MASK[ARMCPU_ARM9][adr>>20], val);
@@ -5927,6 +5956,26 @@ void FASTCALL _MMU_ARM7_write32(u32 adr, u32 val)
 
 			case REG_GCDATAIN:
 				MMU_writeToGC<ARMCPU_ARM7>(val);
+				return;
+
+			case REG_NOCASH_STRING_OUT:
+			{
+				char in_string[0x1000] = {};
+				char in_char = '.';
+
+				for(int i=0; i < 0x1000; i++)
+				{
+					in_char = T1ReadByte(MMU.MMU_MEM[ARMCPU_ARM7][val>>20], (val + i) & MMU.MMU_MASK[ARMCPU_ARM7][val>>20]);
+					if (in_char == '\0')
+						break;
+					in_string[i] = in_char;
+				}
+				printf("%s\n", in_string);
+				return;
+			}
+
+			case REG_NOCASH_CHAR_OUT:
+				printf("%c", (char)(val & 0xFF));
 				return;
 		}
 		T1WriteLong(MMU.MMU_MEM[ARMCPU_ARM7][adr>>20], adr & MMU.MMU_MASK[ARMCPU_ARM7][adr>>20], val);
