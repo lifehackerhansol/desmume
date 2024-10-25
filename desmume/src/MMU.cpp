@@ -3781,7 +3781,20 @@ void FASTCALL _MMU_ARM9_write08(u32 adr, u8 val)
 					MMU.AUX_SPI_CNT &= ~0x80; //remove busy flag
 					return;
 				}
-					
+
+				case REG_GCROMCTRL:
+					MMU_writeToGCControl<ARMCPU_ARM9>( (T1ReadLong(MMU.MMU_MEM[0][0x40], 0x1A4) & 0xFFFFFF00) | val);
+					return;
+				case REG_GCROMCTRL+1:
+					MMU_writeToGCControl<ARMCPU_ARM9>( (T1ReadLong(MMU.MMU_MEM[0][0x40], 0x1A4) & 0xFFFF00FF) | ((u32) val << 8));
+					return;
+				case REG_GCROMCTRL+2:
+					MMU_writeToGCControl<ARMCPU_ARM9>( (T1ReadLong(MMU.MMU_MEM[0][0x40], 0x1A4) & 0xFF00FFFF) | ((u32) val << 16));
+					return;
+				case REG_GCROMCTRL+3:
+					MMU_writeToGCControl<ARMCPU_ARM9>( (T1ReadLong(MMU.MMU_MEM[0][0x40], 0x1A4) & 0x00FFFFFF) | ((u32) val << 24));
+					return;
+
 				case REG_POWCNT1: writereg_POWCNT1(8,adr,val); break;
 					
 				case REG_IF: REG_IF_WriteByte<ARMCPU_ARM9>(0,val); break;
@@ -5642,6 +5655,19 @@ void FASTCALL _MMU_ARM7_write08(u32 adr, u8 val)
 				// CrazyMax: 27 May 2013: BIOS write 8bit commands to flash controller when load firmware header 
 				// into RAM at 0x027FF830
 				MMU_writeToSPIData(val);
+				return;
+
+			case REG_GCROMCTRL:
+				MMU_writeToGCControl<ARMCPU_ARM7>( (T1ReadLong(MMU.MMU_MEM[0][0x40], 0x1A4) & 0xFFFFFF00) | val);
+				return;
+			case REG_GCROMCTRL+1:
+				MMU_writeToGCControl<ARMCPU_ARM7>( (T1ReadLong(MMU.MMU_MEM[0][0x40], 0x1A4) & 0xFFFF00FF) | ((u32) val << 8));
+				return;
+			case REG_GCROMCTRL+2:
+				MMU_writeToGCControl<ARMCPU_ARM7>( (T1ReadLong(MMU.MMU_MEM[0][0x40], 0x1A4) & 0xFF00FFFF) | ((u32) val << 16));
+				return;
+			case REG_GCROMCTRL+3:
+				MMU_writeToGCControl<ARMCPU_ARM7>( (T1ReadLong(MMU.MMU_MEM[0][0x40], 0x1A4) & 0x00FFFFFF) | ((u32) val << 24));
 				return;
 		}
 		MMU.MMU_MEM[ARMCPU_ARM7][adr>>20][adr&MMU.MMU_MASK[ARMCPU_ARM7][adr>>20]]=val;
