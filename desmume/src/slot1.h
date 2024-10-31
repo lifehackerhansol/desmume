@@ -107,6 +107,7 @@ enum NDS_SLOT1_TYPE
 	NDS_SLOT1_RETAIL_MCROM,	            // 0x01 - a standard MC (eeprom, flash, fram) -bearing retail card. Also supports motion, for now, because that's the way we originally coded it
 	NDS_SLOT1_RETAIL_DEBUG,	            // 0x04 - for romhacking and fan-made translations
 	NDS_SLOT1_AK2I,                     // 0x05
+	NDS_SLOT1_DSTT,                     // 0x06
 	NDS_SLOT1_COUNT			            //use to count addons - MUST BE LAST!!!
 };
 

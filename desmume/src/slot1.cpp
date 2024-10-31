@@ -103,6 +103,7 @@ void slot1_Init()
 	extern TISlot1InterfaceConstructor construct_Slot1_Retail_MCROM;
 	extern TISlot1InterfaceConstructor construct_Slot1_Retail_DEBUG;
 	extern TISlot1InterfaceConstructor construct_Slot1_AK2i;
+	extern TISlot1InterfaceConstructor construct_Slot1_dstt;
 	slot1_List[NDS_SLOT1_NONE] = construct_Slot1_None();
 	slot1_List[NDS_SLOT1_RETAIL_AUTO] = construct_Slot1_Retail_Auto();
 	slot1_List[NDS_SLOT1_R4] = construct_Slot1_R4();
@@ -110,6 +111,7 @@ void slot1_Init()
 	slot1_List[NDS_SLOT1_RETAIL_MCROM] = construct_Slot1_Retail_MCROM();
 	slot1_List[NDS_SLOT1_RETAIL_DEBUG] = construct_Slot1_Retail_DEBUG();
 	slot1_List[NDS_SLOT1_AK2I] = construct_Slot1_AK2i();
+	slot1_List[NDS_SLOT1_DSTT] = construct_Slot1_dstt();
 }
 
 void slot1_Shutdown()

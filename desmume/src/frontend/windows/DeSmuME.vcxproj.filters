@@ -333,6 +333,9 @@
     <ClCompile Include="..\..\addons\slot1_ak2.cpp">
       <Filter>addons</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\addons\slot1_dstt.cpp">
+      <Filter>addons</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\addons\slot1_r4.cpp">
       <Filter>addons</Filter>
     </ClCompile>
